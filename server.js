@@ -1,22 +1,26 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var session = require('express-session');
+var moment = require('moment');
+// var session = require('express-session');
+var jwt = require('jwt-simple');
 var mongoose = require('mongoose');
 
-var mid = require('./middleware')
 
 var app = express();
+app.set('jwtTokenSecret', 'STANLEYISFUCKINGLYAWESOME');
+var mid = require('./middleware')
+
 var port = process.env.PORT || 5000;
 
 
 
 var User = require('./model/user.js');
 // use sessions for tracking login
-app.use(session({
-  secret: 'Stanley make a vue demo',
-  resave: true,
-  saveUninitialized: false
-}));
+// app.use(session({
+//   secret: 'Stanley make a vue demo',
+//   resave: true,
+//   saveUninitialized: false
+// }));
 
 // serve static files from /public
 app.use(express.static('public'));
@@ -37,16 +41,34 @@ app.post('/signup', function(req, res){
   user.save(function(err,user){
     if(err) return console.error(err);
     console.log(user + " new user save to database!!!");
-    req.session.userId = user._id;
-    console.log(req.session.userID);
-    console.log(req.session);
-    res.send('sign up succefful!!!');
+    // req.session.userId = user._id;
+    // console.log(req.session.userID);
+    // console.log(req.session);
+    // res.send('sign up succefful!!!');
+    var expires = moment().add('days', 7).valueOf();
+    var token = jwt.encode({
+      iss: user._id,
+      exp: expires
+    }, app.get('jwtTokenSecret'));
+
+    res.json({
+      token : token,
+      expires: expires,
+      user: user.toJSON()
+    });
   });
 });
 
 
-app.get('/try', mid.requiredLogin, function(req, res){
-  res.send('you are login, you can view this page');
+app.get('/try', mid.needRequied, function(req, res){
+  var hi = req.user;
+  console.log(req.user);
+  res.send('hi ' + req.user.userName + ', you are login, you can view this page');
+})
+
+app.use(function(err, req, res, next){
+  res.status(401);
+  res.send('No token provided');
 })
 
 app.listen(port, function () {
