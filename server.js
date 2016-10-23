@@ -1,30 +1,20 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var moment = require('moment');
-// var session = require('express-session');
 var jwt = require('jwt-simple');
 var mongoose = require('mongoose');
 
 
+var port = process.env.PORT || 5000;
 var app = express();
 app.set('jwtTokenSecret', 'STANLEYISFUCKINGLYAWESOME');
-var mid = require('./middleware')
 
-var port = process.env.PORT || 5000;
-
-
-
+var mid = require('./middleware');
 var User = require('./model/user.js');
-// use sessions for tracking login
-// app.use(session({
-//   secret: 'Stanley make a vue demo',
-//   resave: true,
-//   saveUninitialized: false
-// }));
+var apiRouter = require('./routers/api');
 
 // serve static files from /public
 app.use(express.static('public'));
-
 // Mongodb connection
 mongoose.connect('mongodb://localhost:27017/vue-demo');
 var db = mongoose.connection;
@@ -40,11 +30,22 @@ app.post('/signup', function(req, res){
   var user = new User({userName: req.body.user , password:req.body.password});
   user.save(function(err,user){
     if(err) return console.error(err);
-    console.log(user + " new user save to database!!!");
-    // req.session.userId = user._id;
-    // console.log(req.session.userID);
-    // console.log(req.session);
-    // res.send('sign up succefful!!!');
+    var expires = moment().add('days', 7).valueOf();
+    var token = jwt.encode({
+      iss: user._id,
+      exp: expires
+    }, app.get('jwtTokenSecret'));
+
+    res.json({
+      token : token,
+      expires: expires
+    });
+  });
+});
+
+app.post('/login', function(req, res){
+  User.authenticate(req.body.user, req.body.password, function(err, user){
+    if(err) console.log(err);
     var expires = moment().add('days', 7).valueOf();
     var token = jwt.encode({
       iss: user._id,
@@ -54,11 +55,11 @@ app.post('/signup', function(req, res){
     res.json({
       token : token,
       expires: expires,
-      user: user.toJSON()
     });
-  });
-});
+  })
+})
 
+app.use('/api', mid.needRequied, apiRouter)
 
 app.get('/try', mid.needRequied, function(req, res){
   var hi = req.user;

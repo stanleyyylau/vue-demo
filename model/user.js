@@ -4,16 +4,20 @@ var bcrypt = require('bcrypt');
 var UserSchema = mongoose.Schema({
     userName: {
       type: String,
-      required: true
+      required: true,
+      unique: true
     },
     password: {
       type: String,
       required: true
+    },
+    todos: {
+      type: Array
     }
 });
 
-UserSchema.statics.authenticate = function(email, password, callback){
-  User.findOne({email: email})
+UserSchema.statics.authenticate = function(userName, password, callback){
+  User.findOne({userName: userName})
       .exec(function( error, user ){
         if (error) {
           return callback(error);
