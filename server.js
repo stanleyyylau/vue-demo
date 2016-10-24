@@ -34,7 +34,10 @@ app.get('/', function(req, res){
 app.post('/signup', function(req, res){
   var user = new User({userName: req.body.user , password:req.body.password});
   user.save(function(err,user){
-    if(err) return res.json({code: 500, error: "account exist"})
+    if(err) return res.json({
+      success: false,
+      error: "account exist"
+    })
     var expires = moment().add('days', 7).valueOf();
     var token = jwt.encode({
       iss: user._id,
