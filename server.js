@@ -16,7 +16,7 @@ var apiRouter = require('./routers/api');
 // serve static files from /public
 app.use(express.static('public'));
 // Mongodb connection
-mongoose.connect('mongodb://localhost:27017/vue-demo');
+mongoose.connect('mongodb://stanley:stanley@ds031167.mlab.com:31167/vuedemoo');
 var db = mongoose.connection;
 //
 db.on('error', console.error.bind(console, 'connection error'));
