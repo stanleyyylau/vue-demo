@@ -50,7 +50,13 @@ app.post('/signup', function(req, res){
 
 app.post('/login', function(req, res){
   User.authenticate(req.body.user, req.body.password, function(err, user){
-    if(err) return res.json(err);
+    if(err) {
+      console.log(err);
+      res.json({
+        code: 300,
+        msg: "user name for password incorrect";
+      })
+    }
     var expires = moment().add('days', 7).valueOf();
     var token = jwt.encode({
       iss: user._id,
