@@ -25,6 +25,9 @@ db.on('error', console.error.bind(console, 'connection error'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+app.get('/', function(req, res){
+  res.send('Welcome to use todo app API')
+})
 
 app.post('/signup', function(req, res){
   var user = new User({userName: req.body.user , password:req.body.password});
