@@ -5,7 +5,7 @@ var jwt = require('jwt-simple');
 var mongoose = require('mongoose');
 
 // Mongodb connection make heroku reconnect to db
-mongoose.connect('mongodb://stanley:stanley@ds031167.mlab.com:31167/vuedemoo');
+mongoose.connect('mongodb://stanley:stanley@ds029456.mlab.com:29456/urlapp');
 var db = mongoose.connection;
 //
 db.on('error', console.error.bind(console, 'connection error'));
