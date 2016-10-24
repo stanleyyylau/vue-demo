@@ -42,6 +42,8 @@ app.post('/signup', function(req, res){
     }, app.get('jwtTokenSecret'));
 
     res.json({
+      success: true,
+      userName: user.userName,
       token : token,
       expires: expires
     });
@@ -53,20 +55,22 @@ app.post('/login', function(req, res){
     if(err) {
       console.log(err);
       res.json({
-        code: 300,
-        msg: "user name for password incorrect";
-      })
-    }
-    var expires = moment().add('days', 7).valueOf();
-    var token = jwt.encode({
-      iss: user._id,
-      exp: expires
-    }, app.get('jwtTokenSecret'));
+        success: false,
+        msg: "user name for password incorrect"
+      });
+    }else{
+      var expires = moment().add('days', 7).valueOf();
+      var token = jwt.encode({
+        iss: user._id,
+        exp: expires
+      }, app.get('jwtTokenSecret'));
 
-    res.json({
-      token : token,
-      expires: expires,
-    });
+      res.json({
+        userName: user.userName,
+        token : token,
+        expires: expires,
+      });
+    }
   })
 })
 

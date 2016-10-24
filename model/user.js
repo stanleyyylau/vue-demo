@@ -30,7 +30,8 @@ UserSchema.statics.authenticate = function(userName, password, callback){
           if(result === true){
             return callback(null, user);
           }else {
-            return callback();
+            var err = new Error('password incorrect');
+            return callback(err);
           }
         })
       })
