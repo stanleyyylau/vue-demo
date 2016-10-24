@@ -4,6 +4,12 @@ var moment = require('moment');
 var jwt = require('jwt-simple');
 var mongoose = require('mongoose');
 
+// Mongodb connection make heroku reconnect to db
+mongoose.connect('mongodb://stanley:stanley@ds031167.mlab.com:31167/vuedemoo');
+var db = mongoose.connection;
+//
+db.on('error', console.error.bind(console, 'connection error'));
+
 
 var port = process.env.PORT || 5000;
 var app = express();
@@ -15,11 +21,6 @@ var apiRouter = require('./routers/api');
 
 // serve static files from /public
 app.use(express.static('public'));
-// Mongodb connection make heroku reconnect to db
-mongoose.connect('mongodb://stanley:stanley@ds031167.mlab.com:31167/vuedemoo');
-var db = mongoose.connection;
-//
-db.on('error', console.error.bind(console, 'connection error'));
 
 // parse incoming requests
 app.use(bodyParser.json());
