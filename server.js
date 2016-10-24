@@ -82,7 +82,7 @@ app.use('/api', mid.needRequied, apiRouter)
 app.get('/try', mid.needRequied, function(req, res){
   var hi = req.user;
   console.log(req.user);
-  res.send('hi ' + req.user.userName + ', you are login, you can view this page');
+  res.send('Hi ' + req.user.userName + ', You are login, you can view this page');
 })
 
 app.use(function(err, req, res, next){
