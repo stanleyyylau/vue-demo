@@ -15,7 +15,7 @@ var apiRouter = require('./routers/api');
 
 // serve static files from /public
 app.use(express.static('public'));
-// Mongodb connection
+// Mongodb connection make heroku reconnect to db
 mongoose.connect('mongodb://stanley:stanley@ds031167.mlab.com:31167/vuedemoo');
 var db = mongoose.connection;
 //
@@ -28,6 +28,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.get('/', function(req, res){
   res.send('Welcome to use todo app API')
 })
+
 
 app.post('/signup', function(req, res){
   var user = new User({userName: req.body.user , password:req.body.password});
