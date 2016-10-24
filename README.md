@@ -1,11 +1,11 @@
 ## To signup
-**/signup**
+**/signup  (post)**
 + req.body.user
 + req.body.password
 + 返回一个token
 
 ## To login
-**/login**
+**/login  (post)**
 + req.body.user
 + req.body.password
 + 返回一个token
