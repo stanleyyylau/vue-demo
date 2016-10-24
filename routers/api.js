@@ -13,7 +13,10 @@ var User = require('./../model/user');
 
 router.get('/', function(req, res, next){
   var todos = req.user.todos
-  res.json(todos);
+  res.json({
+    userName: req.user.userName,
+    todos: todos
+  });
 })
 
 router.post('/delete', function(req, res, next){
@@ -29,7 +32,10 @@ router.post('/delete', function(req, res, next){
   var query = { _id: req.user._id }
   var options = {new: true};
   User.findOneAndUpdate(query, { todos: newTodos }, options, function(err, user){
-    res.json(user.todos);
+    res.json({
+      userName: req.user.userName,
+      todos: user.todos
+    });
   })
 })
 
@@ -51,7 +57,10 @@ router.post('/update', function(req, res, next){
   var query = { _id: req.user._id }
   var options = {new: true};
   User.findOneAndUpdate(query, { todos: newTodos }, options, function(err, user){
-    res.json(user.todos);
+    res.json({
+      userName: req.user.userName,
+      todos: user.todos
+    });
   })
 
 })
@@ -70,7 +79,10 @@ router.post('/create', function(req, res, next){
   var query = { _id: req.user._id };
   var options = {new: true};
   User.findOneAndUpdate(query, { todos: todos }, options, function(err, user){
-    res.json(user.todos);
+    res.json({
+      userName: req.user.userName,
+      todos: user.todos
+    });
   })
 })
 
